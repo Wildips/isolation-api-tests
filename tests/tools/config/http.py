@@ -1,4 +1,9 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, IPvAnyAddress, HttpUrl
+
+
+class HTTPServerTestConfig(BaseModel):
+    port: int
+    address: IPvAnyAddress
 
 
 class HTTPClientTestConfig(BaseModel):
