@@ -6,6 +6,7 @@ import pytest
 # и скрывают всю логику сравнения вложенных сущностей.
 from tests.assertions.http.gateway import (
     assert_get_user_details_response_user_with_active_credit_card_account,
+    assert_get_account_details_response_user_with_active_debit_card_account,
 )
 
 # HTTP API-клиент gateway-service тестового слоя.
@@ -37,14 +38,12 @@ from tests.tools.allure import AllureTag, AllureStory, AllureFeature
 # и CI/CD сценариев.
 @pytest.mark.gateway
 @pytest.mark.regression
-
 # Allure-теги верхнего уровня.
 #
 # Здесь мы фиксируем:
 # - что тест относится к HTTP-протоколу,
 # - что тестирует gateway-service.
 @allure.tag(AllureTag.HTTP, AllureTag.GATEWAY_SERVICE)
-
 # Allure feature — бизнес-область теста.
 # В отчёте Allure все тесты gateway будут сгруппированы вместе.
 @allure.feature(AllureFeature.GATEWAY_SERVICE)
@@ -64,8 +63,8 @@ class TestGatewayHTTP:
     @allure.story(AllureStory.GET_USER_DETAILS)
     @allure.title("[HTTP] Get user details. User with active credit card account")
     def test_get_user_details_user_with_active_credit_card_account(
-        self,
-        gateway_http_test_client: GatewayHTTPTestClient,
+            self,
+            gateway_http_test_client: GatewayHTTPTestClient,
     ):
         """
         Сценарий:
@@ -101,5 +100,21 @@ class TestGatewayHTTP:
         # Тест не сравнивает JSON, не перебирает поля
         # и не знает, откуда взялись ожидаемые данные.
         assert_get_user_details_response_user_with_active_credit_card_account(
+            response
+        )
+
+    @allure.story(AllureStory.GET_ACCOUNT_DETAILS)
+    @allure.title("[HTTP] Get account details. User with active debit card account")
+    def test_get_account_details_user_with_active_debit_card_account(
+            self,
+            gateway_http_test_client: GatewayHTTPTestClient,
+    ):
+        response = gateway_http_test_client.get_account_details(
+            RequestContext(
+                scenario=Scenario.USER_WITH_ACTIVE_DEBIT_CARD_ACCOUNT
+            )
+        )
+
+        assert_get_account_details_response_user_with_active_debit_card_account(
             response
         )
