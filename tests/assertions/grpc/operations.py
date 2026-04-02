@@ -32,14 +32,6 @@ OPERATION_STATUS_TO_PROTO: dict[OperationTestStatus, int] = {
 }
 
 
-def map_operation_type_to_proto(value: str | OperationTestType) -> int:
-    return OPERATION_TYPE_TO_PROTO[OperationTestType(value)]
-
-
-def map_operation_status_to_proto(value: str | OperationTestStatus) -> int:
-    return OPERATION_STATUS_TO_PROTO[OperationTestStatus(value)]
-
-
 @allure.step("Check operation from event")
 def assert_operation_from_event(
         actual: Operation,
@@ -47,8 +39,8 @@ def assert_operation_from_event(
 ) -> None:
     logger.info("Check operation from event")
 
-    assert_equal(actual.type, map_operation_type_to_proto(expected.type), "type")
-    assert_equal(actual.status, map_operation_status_to_proto(expected.status), "status")
+    assert_equal(actual.type, expected.type, "type")
+    assert_equal(actual.status, expected.status, "status")
     assert_equal(actual.amount, expected.amount, "amount")
     assert_equal(actual.user_id, expected.user_id, "user_id")
     assert_equal(actual.card_id, expected.card_id, "card_id")
@@ -65,8 +57,8 @@ def assert_operation_from_model(
     logger.info("Check operation from model")
 
     assert_equal(actual.id, expected.id, "id")
-    assert_equal(actual.type, map_operation_type_to_proto(expected.type), "type")
-    assert_equal(actual.status, map_operation_status_to_proto(expected.status), "status")
+    assert_equal(actual.type, expected.type, "type")
+    assert_equal(actual.status, expected.status, "status")
     assert_equal(actual.amount, expected.amount, "amount")
     assert_equal(actual.user_id, expected.user_id, "user_id")
     assert_equal(actual.card_id, expected.card_id, "card_id")
