@@ -53,3 +53,23 @@ class TestOperationsGRPC:
         )
 
         assert_get_operations_response_from_models(response, [model])
+
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="psycopg2 + Windows Unicode limitation"
+    )
+    @allure.tag(AllureTag.GRPC, AllureTag.POSTGRES, AllureTag.OPERATIONS_SERVICE)
+    @allure.story(AllureStory.OPERATION_FILTERS)
+    @allure.title("[gRPC][Postgres] Filter by account id. Completed purchase operation")
+    def test_filter_by_account_id_completed_purchase_operation(
+            self,
+            operations_grpc_test_client: OperationsGRPCTestClient,
+            operations_postgres_test_repository: OperationsPostgresTestRepository
+    ):
+        model = operations_postgres_test_repository.create_completed_purchase_operation()
+        response = operations_grpc_test_client.get_operations(
+            user_id=model.user_id,
+            account_id=model.account_id
+        )
+
+        assert_get_operations_response_from_models(response, [model])
